@@ -1,7 +1,12 @@
 .tableNav{
 	vertical-align: top;
 }
-
+.toggler{
+	vertical-align: bottom;
+}
+.togglee{
+	visibility: hidden;
+}
 h1 {
 	color: blue;
 }
