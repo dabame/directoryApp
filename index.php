@@ -14,80 +14,106 @@
 	<body>
 		<div id ="wrapper">
 			<h1>Directory Listings</h1>
-			<table id ="table">
-				<tr>
-					<td rowspan ="100%" id ="tableNav">
-						Search<br/>
-						<form id="search" action="index.php" method="post">
-							<select id = "searchMenu" name = "searchMenu">
-								<option value="lastName">Last Name</option>
-								<option value="firstName">First Name</option>
-								<option value="dob">Date of Birth</option>
-								<option value="zip">Zip Code</option>
-							</select><br/>
-							<input type ="text" name ="searchValue" size = "11"/>
-						</form>
-						<input type ="button" id ="manage"class ="toggler" value ="Manage..."
-							onclick="manage();"/>
-					</td>
-					<td>Last Name</td>
-					<td>First Name</td>
-					<td>Date of Birth</td>
-					<td>Zip Code</td>
-				</tr>
-				<?php
-				// set variables used for $conn
-				require_once('dbInfo.php');
+			<form action ="index.php" method ="post">
+				Search
+				<select id = "searchMenu" name = "searchMenu">
+					<option value="lastName">Last Name</option>
+					<option value="firstName">First Name</option>
+					<option value="dob">Date of Birth</option>
+					<option value="zip">Zip Code</option>
+				</select>
+				<input type ="text" name ="searchValue" size = "11"/>
+			</form>
+			<input type ="button" id ="manage" class ="toggler"
+				value ="Manage..." onclick="manage();"/>
+			<form action ="index.php" method ="post" >
+				<table id ="table">
+					<tr>
+						<td>Last Name</td>
+						<td>First Name</td>
+						<td>Date of Birth</td>
+						<td>Zip Code</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+<?php
+// set variables used for $conn
+require_once('dbInfo.php');
 
-				// Create Connection
-				$conn = new mysqli($servername, $username, $password, $dbname);
+// Create Connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-				// Check Connection
-				if ($conn->connect_error) {
-					die ("Connection failed: " . $conn->connect_error);
-				}
-				if ( empty($_POST))
-					$sql = "SELECT * FROM persons";
-				elseif (count($_POST) == 4){
-					$sql = "INSERT INTO 'persons' ('pri-key', 'lastName', 'firstName', 'dob', 'zip') VALUES ('NULL', '$_POST[lastName]', '$_POST[firstName]', '$_POST[dob]', '$_POST[zip]');";
-					$conn->query($sql);
-					$sql = "SELECT * FROM persons";
-				}
-				elseif ($_POST["searchValue"] == ""){
-					$sql = "SELECT * FROM persons";
-				}
-				else{
-					$sql = "SELECT * FROM persons WHERE ".$_POST['searchMenu']."='". $_POST['searchValue']."'" ; 
-				}
+// Check Connection
+if ($conn->connect_error) {
+	die ("Connection failed: " . $conn->connect_error);
+}
 
-				
-				$result = $conn->query($sql);
+// This if statement handles different cases for contents of POST
+if ( empty($_POST))
+	$sql = "SELECT * FROM persons";
 
-				if ($result->num_rows > 0){
-					//output data of each row
-					while ($row = $result->fetch_assoc()){
-						echo "<tr><td>".$row["lastName"]."</td><td>".$row["firstName"].
-							"</td><td>".$row["dob"]."</td><td>".$row["zip"]."</td>".
-							"</td><td><input type = 'button' class = 'togglee' value = 'edit' onclick = 'editMode();'</td>".
-							"</td><td><input type = 'button' class = 'togglee' value = 'delete' onclick = 'deleteEntry();'</td></tr>";
-					}
-				}
-				$conn->close();
-				
-				?>
-				<tr class ="togglee">
-					<form id ="newRecord" action ="index.php" method="post">
-						<td><input type ="text" name ="lastName" size = "11" value ="new..."/></td>
-						<td><input type ="text" name ="firstName" size = "11"/></td>
-						<td><input type ="text" name ="dob" size = "11"/></td>
-						<td><input type ="text" name ="zip" size = "11"/></td>
-						<td><input type ="submit" value ="submit"/>
-					</form>
-					<td><input type ="button" onclick ="resetRow();" value ="clear"/></td>
-				</tr>
-					
-			</table>
+// Submit button case Inserts new record before display
+elseif ($_POST["insert"] ===""){
+	$sql = "INSERT INTO persons (lastName, firstName, dob, zip) VALUES ('".$_POST[lastName]."', '".$_POST[firstName]."', '".$_POST[dob]."', '".$_POST[zip]."');";
+	$conn->query($sql);
+	$sql = "SELECT * FROM persons";
+}
+
+// Delete button cases, deletes record before display
+elseif ($_POST["delete"] ===""){
+	$sql = "DELETE FROM persons WHERE pri_key='".$_POST["pri_key"]."'";
+	$conn->query($sql);
+	$sql = "SELECT * FROM persons";
+}
+
+// Update button case, updates record
+elseif ($_POST["update"] ===""){
+	$sql = "UPDATE persons SET lastName = '".$_POST["lastName"]."', firstName = '".$_POST["firstName"]."', dob = '".$_POST["dob"]."', zip = '".$_POST["zip"]."' WHERE persons.pri_key = ".$_POST["pri_key"];
+	$conn->query($sql);
+	echo $conn->error;
+	$sql = "SELECT * FROM persons";
+}
+
+// empty search
+elseif ($_POST["searchValue"] == ""){
+	$sql = "SELECT * FROM persons";
+}
+// search table
+else{
+	$sql = "SELECT * FROM persons WHERE ".$_POST['searchMenu']."='". $_POST['searchValue']."'" ; 
+}
+
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0){
+	//output data of each row
+	$i=0;
+	while ($row = $result->fetch_assoc()){
+		echo "<tr><td>".$row["lastName"]."</td><td>".$row["firstName"].
+			"</td><td>".$row["dob"]."</td><td>".$row["zip"].
+			"\n</td><td class = 'pri_key'>".$row["pri_key"]."</td><td>".
+			"<input type = 'button' class = 'togglee' onclick='edit(".$i.");' value = 'edit'/>".
+			"</td>\n<td><button type = 'submit' class = 'togglee' name = 'delete' onclick = 'deleteIt(".$i.");'>delete</button></td></tr>\n";
+		$i++;
+	}
+}
+$conn->close();
+
+?>
+					<tr class ="togglee">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><input type ="button" value ="new" onclick ="newRecord(<?php echo $result->num_rows ?>);"/></td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
 		</div>
 	</body>
 </html>
-		
+

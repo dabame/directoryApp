@@ -7,6 +7,9 @@
 .togglee{
 	visibility: hidden;
 }
+.pri_key{
+	visibility: hidden;
+}
 h1 {
 	color: blue;
 }
