@@ -23,9 +23,7 @@
 					<option value="zip">Zip Code</option>
 				</select>
 				<input type ="text" name ="searchValue" size = "11"/>
-			</form>
-			<input type ="button" id ="manage" class ="toggler"
-				value ="Manage..." onclick="manage();"/>
+			</form><br/>
 			<form action ="index.php" method ="post" >
 				<table id ="table">
 					<tr>
@@ -33,7 +31,7 @@
 						<td>First Name</td>
 						<td>Date of Birth</td>
 						<td>Zip Code</td>
-						<td></td>
+						<td class ="pri_key"></td>
 						<td></td>
 						<td></td>
 					</tr>
@@ -93,21 +91,21 @@ if ($result->num_rows > 0){
 	while ($row = $result->fetch_assoc()){
 		echo "<tr><td>".$row["lastName"]."</td><td>".$row["firstName"].
 			"</td><td>".$row["dob"]."</td><td>".$row["zip"].
-			"\n</td><td class = 'pri_key'>".$row["pri_key"]."</td><td>".
-			"<input type = 'button' class = 'togglee' onclick='edit(".$i.");' value = 'edit'/>".
-			"</td>\n<td><button type = 'submit' class = 'togglee' name = 'delete' onclick = 'deleteIt(".$i.");'>delete</button></td></tr>\n";
+			"\n</td><td class = 'pri_key'>".$row["pri_key"]."</td>".
+			"<td class = 'buttonField'><input type = 'button' class = 'togglee' onclick='edit(".$i.");' value = 'edit'/></td>\n".
+			"<td class = 'buttonField'><button type = 'submit' class = 'togglee' name = 'delete' onclick = 'deleteIt(".$i.");'>delete</button></td></tr>\n";
 		$i++;
 	}
 }
 $conn->close();
 
 ?>
-					<tr class ="togglee">
+					<tr class ="inputRow">
 						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
-						<td></td>
+						<td class ="pri_key"></td>
 						<td><input type ="button" value ="new" onclick ="newRecord(<?php echo $result->num_rows ?>);"/></td>
 						<td></td>
 					</tr>

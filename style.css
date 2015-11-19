@@ -1,15 +1,22 @@
-.tableNav{
-	vertical-align: top;
-}
-.toggler{
-	vertical-align: bottom;
-}
-.togglee{
-	visibility: hidden;
-}
 .pri_key{
 	visibility: hidden;
 }
 h1 {
 	color: blue;
 }
+table{
+	border-collapse: collapse;
+}
+tr:nth-child(even){
+	background: #d9d9d9;
+}
+
+tr.inputRow, td.buttonField{
+	background: white;
+}
+button, input, select{
+	border-radius: 5px;
+}
+
+
+	
