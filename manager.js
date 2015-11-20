@@ -16,7 +16,7 @@ function resetRow(){
 function edit(i){
 	var row = document.getElementById('table').rows[i+1];
 	var numRows = document.getElementById('table').rows.length-1;
-	var lastRow = document.getElementById('table').rows[numRows];
+	var lastRow = document.getElementById('newTable').rows[0];
 
 	row.style.color = "red";
 	lastRow.cells[0].innerHTML = "<input type ='text' name ='lastName' size = '8' value = '"+row.cells[0].innerHTML+"'/>";
@@ -36,29 +36,24 @@ function edit(i){
 	hideButtons();
 }
 
-function newRecord(curRow){
+function newRecord(){
 	var numRows = document.getElementById('table').rows.length-1;
-	var row = document.getElementById('table').rows[numRows];
+	var row = document.getElementById('newTable').rows[0];
 		
-	row.innerHTML = "<form action = 'index.php' method = 'post'>" + row.innerHTML + "</form>";
-	row.cells[0].innerHTML = "<input type ='text' name ='lastName' size = '8' value = '"+row.cells[0].innerHTML+"'/>";
-	row.cells[1].innerHTML = "<input type ='text' name ='firstName' size = '8' value = '"+row.cells[1].innerHTML+"'/>";
-	row.cells[2].innerHTML = "<input type ='text' name ='dob' size = '9' value = '"+row.cells[2].innerHTML+"'/>";
-	row.cells[3].innerHTML = "<input type ='text' name ='zip' size = '5' value = '"+row.cells[3].innerHTML+"'/>";
+	row.cells[0].innerHTML = "<input type ='text' name ='lastName' size = '12'/>";
+	row.cells[1].innerHTML = "<input type ='text' name ='firstName' size = '12'/>";
+	row.cells[2].innerHTML = "<input type ='text' name ='dob' size = '12'/>";
+	row.cells[3].innerHTML = "<input type ='text' name ='zip' size = '12'/>";
 	row.cells[4].innerHTML = "";
 	row.cells[5].innerHTML = "<button type = 'submit' class = 'togglee2' name = 'insert'>save</button>";
 	row.cells[6].innerHTML = "<button type = 'submit' class = 'togglee2' name = 'discard'>discard</button>";
-	var curText = [];
-	for (j = 0; j < 4; j++){
-		curText[j] = row.cells[j].innerHTML;
-	}
 	
 	hideButtons();
 }
 
 // delete make pri_key an input
 function deleteIt(i){
-	var row = document.getElementById('table').rows[i+1];
+	var row = document.getElementById('innerTable').rows[i];
 	row.cells[4].innerHTML = "<input type = 'hidden' name = 'pri_key' value = '"+row.cells[4].innerHTML+"'/>";
 }
 
@@ -69,6 +64,36 @@ function hideButtons(){
 		buttonsToHide[i].style.visibility = "hidden";
 	}
 }
+
+// checks form for valid input
+function validateForm(){
+	var input = document.forms["personsForm"];
+	valid = true;
+	if (input["lastName"]){
+		if (input["lastName"].value === "" || input["lastName"].value === "*")
+		{
+			var lastName = document.getElementsByName("lastName")[0];
+			lastName.value = "*";
+			lastName.style.color = "red";
+			valid = false;
+		}
+		if (input["firstName"].value === "" || input["firstName"].value === "*")
+		{
+			var lastName = document.getElementsByName("firstName")[0];
+			lastName.value = "*";
+			lastName.style.color = "red";
+			valid = false;
+		}
+		
+		if (valid === false){
+			//		document.body.innerHTML += "* indicates missing or invalid field";
+		}
+		
+		return valid;
+	}
+	return true;
+}
+	
 	
 
 

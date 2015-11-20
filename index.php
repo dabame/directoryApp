@@ -24,17 +24,28 @@
 				</select>
 				<input type ="text" name ="searchValue" size = "11"/>
 			</form><br/>
-			<form action ="index.php" method ="post" >
+			<form name ="personsForm"action ="index.php" method ="post" onsubmit="return validateForm();" >
 				<table id ="table">
 					<tr>
-						<td>Last Name</td>
-						<td>First Name</td>
-						<td>Date of Birth</td>
-						<td>Zip Code</td>
-						<td class ="pri_key"></td>
-						<td></td>
-						<td></td>
+						<td>
+							<table id="tableHead">
+								<tr>
+									<th>Last Name</th>
+									<th>First Name</th>
+									<th>Date of Birth</th>
+									<th>Zip Code</th>
+									<th class ="pri_key"></th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tr>
+							</table>
+						</td>
 					</tr>
+					<tr>
+						<td>
+							<div id ="scrollingTable">
+								<table id ="innerTable">
 <?php
 // set variables used for $conn
 require_once('dbInfo.php');
@@ -82,7 +93,6 @@ else{
 	$sql = "SELECT * FROM persons WHERE ".$_POST['searchMenu']."='". $_POST['searchValue']."'" ; 
 }
 
-
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0){
@@ -100,14 +110,25 @@ if ($result->num_rows > 0){
 $conn->close();
 
 ?>
-					<tr class ="inputRow">
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td class ="pri_key"></td>
-						<td><input type ="button" value ="new" onclick ="newRecord(<?php echo $result->num_rows ?>);"/></td>
-						<td></td>
+								</table>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table id="newTable">
+								<tr class ="inputRow">
+									<th><input type ="button" value ="new" onclick ="newRecord();"/></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th class ="pri_key"> </th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tr>
+							</table>
+						</td>
 					</tr>
 				</table>
 			</form>

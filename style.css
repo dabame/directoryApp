@@ -6,9 +6,26 @@ h1 {
 }
 table{
 	border-collapse: collapse;
+	width: 100%;
 }
-tr:nth-child(even){
+tr tr:nth-child(even){
 	background: #d9d9d9;
+}
+th, td{
+	text-align: left;
+	width: 20%;
+}
+th:nth-child(5), td:nth-child(5){
+					 width: 2%;
+				 }
+th:nth-child(6), td:nth-child(6){
+					 width: 5%;
+				 }
+th:nth-child(7), td:nth-child(7){
+					 width:11.8%;
+				 }
+th:nth-child(8){
+	width:1.2%;
 }
 
 tr.inputRow, td.buttonField{
@@ -18,5 +35,9 @@ button, input, select{
 	border-radius: 5px;
 }
 
-
+#scrollingTable{
+	overflow: auto;
+	height: 280px;
+	border: 1px solid black;
+}
 	
