@@ -1,7 +1,10 @@
 <!-- Directory Application
 	 Author: Daniel dbm0100@yahoo.com
 	 A basic directory application with
-	 create, read, update, delete functionality-->
+	 create, read, update, delete functionality
+	 Version 0.1 completed 11-27.
+	 Hope to revisit this and improve UI and
+	 implement more AJAX!-->
 
 <!DOCTYPE html>
 <html lang ="en">
@@ -9,22 +12,29 @@
 		<meta charset="utf-8"/>
 		<title>Directory Application</title>
 		<link rel ="stylesheet" type="text/css" href ="style.css"/>
-		<script language ="javascript" type ="text/javascript" src ="manager.js"></script>
+		<script language ="javascript" type ="text/javascript" src ="script.js"></script>
 	</head>
 	<body>
 		<div id ="wrapper">
-			<h1>Directory Listings</h1>
-			<form action ="index.php" method ="post">
-				Search
+			<h1>Persons Listings</h1>
+			<h3>Fictional information only please</h3>
+			<!-- A search menu for searching the records -->
+			<form name = "search" onsubmit ="return showRecord();">
+				<input type ="button" onclick ="showRecord()" value ="Search"/>
 				<select id = "searchMenu" name = "searchMenu">
 					<option value="lastName">Last Name</option>
 					<option value="firstName">First Name</option>
 					<option value="dob">Date of Birth</option>
 					<option value="zip">Zip Code</option>
 				</select>
-				<input type ="text" name ="searchValue" size = "11"/>
+				<input type ="text" id = "searchValue" name ="searchValue" size = "11"/>
 			</form><br/>
-			<form name ="personsForm"action ="index.php" method ="post" onsubmit="return validateForm();" >
+
+			<!-- Here's where our search results will end up -->
+			<div id ="searchResults"></div>
+
+			<!-- This form is used for editing, deleting, adding records to the databse -->
+ 			<form name ="personsForm"action ="index.php" method ="post" onsubmit="return validateForm();" >
 				<table id ="table">
 					<tr>
 						<td>
@@ -46,7 +56,7 @@
 						<td>
 							<div id ="scrollingTable">
 								<table id ="innerTable">
-<?php
+<?php 
 // set variables used for $conn
 require_once('dbInfo.php');
 
@@ -84,15 +94,6 @@ elseif ($_POST["update"] ===""){
 	$sql = "SELECT * FROM persons";
 }
 
-// empty search
-elseif ($_POST["searchValue"] == ""){
-	$sql = "SELECT * FROM persons";
-}
-// search table
-else{
-	$sql = "SELECT * FROM persons WHERE ".$_POST['searchMenu']."='". $_POST['searchValue']."'" ; 
-}
-
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0){
@@ -116,6 +117,7 @@ $conn->close();
 					</tr>
 					<tr>
 						<td>
+							<!-- this table used for creating a new record -->
 							<table id="newTable">
 								<tr class ="inputRow">
 									<th><input type ="button" value ="new" onclick ="newRecord();"/></th>

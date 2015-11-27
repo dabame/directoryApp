@@ -33,11 +33,19 @@ tr.inputRow, td.buttonField{
 }
 button, input, select{
 	border-radius: 5px;
+	padding: 0;
+	margin: 0;
 }
 
 #scrollingTable{
 	overflow: auto;
 	height: 280px;
 	border: 1px solid black;
+}
+
+img{
+	height: 30px;
+	padding: 0;
+	margin: 0;
 }
 	

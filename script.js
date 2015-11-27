@@ -1,5 +1,5 @@
 /***********************************************************
-* Hidden interface for managing the directory
+* Main script for directoryApp
 * Author: Daniel dbm0100@yahoo.com
 ************************************************************/
 // clears the row of data
@@ -14,7 +14,7 @@ function resetRow(){
 
 // edit button changes table fields to editable fields
 function edit(i){
-	var row = document.getElementById('table').rows[i+1];
+	var row = document.getElementById('innerTable').rows[i];
 	var numRows = document.getElementById('table').rows.length-1;
 	var lastRow = document.getElementById('newTable').rows[0];
 
@@ -36,6 +36,7 @@ function edit(i){
 	hideButtons();
 }
 
+// Inserts the row and input fields for new record form
 function newRecord(){
 	var numRows = document.getElementById('table').rows.length-1;
 	var row = document.getElementById('newTable').rows[0];
@@ -88,12 +89,56 @@ function validateForm(){
 		if (valid === false){
 			//		document.body.innerHTML += "* indicates missing or invalid field";
 		}
-		
+
+		if (!dateIsValid(input["dob"].value)){
+			var dob = document.getElementsByName("dob")[0];
+			dob.value = "yyyy-mm-dd";
+			dob.style.color = "red";
+			valid = false;
+		}
+		if (!(/^\d{5}$/.test(input["zip"].value))){
+			var zip = document.getElementsByName("zip")[0];
+			zip.value = "XXXXX";
+			zip.style.color = "red";
+			valid = false;
+		}
+
 		return valid;
 	}
 	return true;
 }
-	
+
+// checks that date provided is valid date return true if valid, false if not
+function dateIsValid(date){
+	var bits = date.split('-');
+	var d = new Date(bits[0], bits[1] - 1, bits[2]);
+	return d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[2]);
+}
+
+// show record requested in search bar using AJAX
+function showRecord(){
+	var criteria = document.getElementById("searchMenu").value;
+	var value = document.getElementById("searchValue").value;
+
+	if (value === "")
+	{
+		document.getElementById("searchResults").innerHTML = "";
+	}
+	else
+	{
+		xmlhttp = new XMLHttpRequest()
+		xmlhttp.onreadystatechange = function()
+		{
+			if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+			{
+				document.getElementById("searchResults").innerHTML = xmlhttp.responseText;
+			}
+		};
+		xmlhttp.open("GET","getRecord.php?searchMenu="+criteria+"&searchValue="+value, true);
+		xmlhttp.send();
+	}
+	return false;
+}
 	
 
 
